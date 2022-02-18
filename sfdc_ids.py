@@ -37,12 +37,21 @@ def fifteen_to_eighteen(input_id):
 
 def eighteen_to_fifteen(input_id):
     first_fifteen = input_id[:15]
+    last_three = input_id[15:18].upper()
     caps = get_caps(first_fifteen)  # for casing validation
-    if input_id[15:18].upper() != caps:
+    if last_three != caps:
         logging.warning("Last 3 digits of 18-digit ID don't match computed"
-                        "digits from casing of first 15 digits, "
-                        "returning first 15 digits as-is.")
-        # TODO: coerce the case of the first 15 digits to match the checksum
+                        "digits from casing of first 15 digits, coercing"
+                        "casing as specified by last 3 digits.")
+        last_three_nums = [int(iletter)+26 if ord(iletter) < ord('A')
+                           else ord(iletter)-ord('A')
+                           for iletter in last_three]
+        last_three_masks = [format(inum,'05b')[::-1]
+                            for inum in last_three_nums]
+        mask = ''.join(last_three_masks)
+        output_array = [first_fifteen[i].upper() if mask[i] == '1'
+                        else first_fifteen[i].lower() for i in range(15)]
+        output_id = ''.join(output_array)
     else:
         output_id = first_fifteen
 
