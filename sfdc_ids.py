@@ -1,18 +1,20 @@
 import re
 import logging
 
+
 def validate_id(candidate_id):
     value = -1  # default return value if validation doesn't pass
 
-    if bool(re.match('^[0-9a-zA-Z]{15}$',candidate_id)):
+    if bool(re.match('^[0-9a-zA-Z]{15}$', candidate_id)):
         value = 15
-    elif bool(re.match('^[0-9a-zA-Z]{15}[0-5a-zA-Z]{3}$',candidate_id)):
-        if bool(re.match('^[a-z]{3}',candidate_id[-3:])):
+    elif bool(re.match('^[0-9a-zA-Z]{15}[0-5a-zA-Z]{3}$', candidate_id)):
+        if bool(re.match('^[a-z]{3}', candidate_id[-3:])):
             logging.warning("Last 3 digits of 18-digit ID not capitalized, "
                             "ID might have been mangled by another process.")
         value = 18
 
     return value
+
 
 def get_caps(input_string):
     caps_nums = []
@@ -27,7 +29,6 @@ def get_caps(input_string):
     caps_chars = [str(i-26) if i > 25 else chr(i+ord('A')) for i in caps_nums]
 
     return ''.join(caps_chars)
-
 
 
 def fifteen_to_eighteen(input_id):
@@ -46,7 +47,7 @@ def eighteen_to_fifteen(input_id):
         last_three_nums = [int(iletter)+26 if ord(iletter) < ord('A')
                            else ord(iletter)-ord('A')
                            for iletter in last_three]
-        last_three_masks = [format(inum,'05b')[::-1]
+        last_three_masks = [format(inum, '05b')[::-1]
                             for inum in last_three_nums]
         mask = ''.join(last_three_masks)
         output_array = [first_fifteen[i].upper() if mask[i] == '1'
