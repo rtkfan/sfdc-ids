@@ -6,7 +6,7 @@ def validate_id(candidate_id):
 
     if bool(re.match('^[0-9a-zA-Z]{15}$',candidate_id)):
         value = 15
-    elif bool(re.match('^[0-9a-zA-Z]{18}$',candidate_id)):
+    elif bool(re.match('^[0-9a-zA-Z]{15}[0-5a-zA-Z]{3}$',candidate_id)):
         if bool(re.match('^[a-z]{3}',candidate_id[-3:])):
             logging.warning("Last 3 digits of 18-digit ID not capitalized, "
                             "ID might have been mangled by another process.")
